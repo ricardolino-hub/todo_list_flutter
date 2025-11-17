@@ -20,4 +20,15 @@ class Task {
     'title': title,
     'done': done,
   };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is Task) {
+      return id == other.id;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

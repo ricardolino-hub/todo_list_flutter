@@ -22,4 +22,15 @@ class TodoList {
     'name': name,
     'tasks': tasks.map((t) => t.toJson()).toList(),
   };
+
+  @override
+  bool operator ==(Object other) {
+    if (other is TodoList) {
+      return id == other.id;
+    }
+    return false;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

@@ -43,6 +43,7 @@ class ListDrawer extends StatelessWidget {
                 if (name != null && name.trim().isNotEmpty) {
                   final success = prov.saveCurrentAs(name.trim());
                   final snack = success ? 'Lista salva' : 'Já existem ${3} listas salvas (limite)';
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(snack)));
                 }
               },

@@ -23,6 +23,7 @@ class TodoProvider extends ChangeNotifier {
   void addTask(String title) {
     if (current.tasks.length >= Constants.max_tasks_per_list) return;
     current.tasks.add(Task(id: Uuid().v4(), title: title, done: false));
+    if (savedLists.isNotEmpty && savedLists.contains(current)) savedLists.firstWhere((l) => l.id == current.id).tasks.add(Task(id: Uuid().v4(), title: title, done: false));
     _saveAll();
     notifyListeners();
   }
@@ -31,6 +32,7 @@ class TodoProvider extends ChangeNotifier {
     final idx = current.tasks.indexWhere((e) => e.id == t.id);
     if (idx >= 0) {
       current.tasks[idx] = t;
+      if (savedLists.isNotEmpty  && savedLists.contains(current)) savedLists.firstWhere((l) => l.id == current.id).tasks[idx] = t;
       _saveAll();
       notifyListeners();
     }
@@ -40,6 +42,7 @@ class TodoProvider extends ChangeNotifier {
     final idx = current.tasks.indexWhere((e) => e.id == id);
     if (idx >= 0) {
       current.tasks[idx].done = value;
+      if (savedLists.isNotEmpty  && savedLists.contains(current)) savedLists.firstWhere((l) => l.id == current.id).tasks[idx].done = value;
       _saveAll();
       notifyListeners();
     }
@@ -47,6 +50,7 @@ class TodoProvider extends ChangeNotifier {
 
   void deleteTask(String id) {
     current.tasks.removeWhere((e) => e.id == id);
+    if (savedLists.isNotEmpty  && savedLists.contains(current)) savedLists.firstWhere((l) => l.id == current.id).tasks.removeWhere((e) => e.id == id);
     _saveAll();
     notifyListeners();
   }
@@ -55,6 +59,7 @@ class TodoProvider extends ChangeNotifier {
     final idx = current.tasks.indexWhere((e) => e.id == id);
     if (idx >= 0) {
       current.tasks[idx].title = newTitle;
+      if (savedLists.isNotEmpty && savedLists.contains(current)) savedLists.firstWhere((l) => l.id == current.id).tasks[idx].title = newTitle;
       _saveAll();
       notifyListeners();
     }
@@ -83,9 +88,10 @@ class TodoProvider extends ChangeNotifier {
   }
 
   void switchToSavedList(String id) {
+    _saveAll();
     final found = savedLists.firstWhere((l) => l.id == id, orElse: () => savedLists.isNotEmpty ? savedLists.first : current);
+    // print("switchToSavedList: ${found.toJson()}");
     current = TodoList(id: found.id, name: found.name, tasks: found.tasks.map((t) => Task(id: t.id, title: t.title, done: t.done)).toList());
-    _saveCurrent();
     notifyListeners();
   }
 
