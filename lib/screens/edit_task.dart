@@ -39,7 +39,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   : Task(id: widget.task!.id, title: text, done: widget.task!.done);
               Navigator.of(context).pop({'title': text, 'task': t});
             },
-            child: Text('Salvar', style: TextStyle(color: Colors.white)),
+            child: Text('Salvar', style: TextStyle(color: Colors.black)),
           )
         ],
       ),
