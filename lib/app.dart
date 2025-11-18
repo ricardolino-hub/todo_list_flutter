@@ -5,7 +5,7 @@ import 'providers/todo_provider.dart';
 
 class App extends StatelessWidget {
   final TodoProvider provider;
-  const App({Key? key, required this.provider}) : super(key: key);
+  const App({super.key, required this.provider});
 
   @override
   Widget build(BuildContext context) {

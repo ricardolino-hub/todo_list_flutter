@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/todo_provider.dart';
 
 class ListDrawer extends StatelessWidget {
-  const ListDrawer({Key? key}) : super(key: key);
+  const ListDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {

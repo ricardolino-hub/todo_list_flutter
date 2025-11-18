@@ -8,7 +8,7 @@ import '../widgets/list_drawer.dart';
 
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   Future<void> _openEditor(BuildContext context, {Task? task}) async {
     final res = await Navigator.of(context).push(MaterialPageRoute(builder: (_) => EditTaskScreen(task: task)));
@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TodoProvider>(builder: (_, prov, __) {
+    return Consumer<TodoProvider>(builder: (_, prov, _) {
       final list = prov.current;
       return Scaffold(
         appBar: AppBar(

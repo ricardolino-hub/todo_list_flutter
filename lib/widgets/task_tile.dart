@@ -5,7 +5,7 @@ class TaskTile extends StatelessWidget {
   final Task task;
   final ValueChanged<bool?> onChanged;
 
-  const TaskTile({Key? key, required this.task, required this.onChanged}) : super(key: key);
+  const TaskTile({super.key, required this.task, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:todo_app/models/tark.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final Task? task;
-  const EditTaskScreen({Key? key, this.task}) : super(key: key);
+  const EditTaskScreen({super.key, this.task});
 
   @override
   State<EditTaskScreen> createState() => _EditTaskScreenState();
@@ -49,7 +49,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
           controller: _ctl,
           autofocus: true,
           decoration: InputDecoration(labelText: 'Título'),
-          onSubmitted: (_) => null,
+          onSubmitted: (_) {},
         ),
       ),
     );
