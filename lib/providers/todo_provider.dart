@@ -69,8 +69,10 @@ class TodoProvider extends ChangeNotifier {
   bool saveCurrentAs(String name) {
     if (savedLists.length >= Constants.max_lists) return false;
     final copy = TodoList(id: current.id, name: name, tasks: current.tasks.map((t) => Task(id: t.id, title: t.title, done: t.done)).toList());
+    current.name = copy.name;
     savedLists.add(copy);
     _saveAllLists();
+    notifyListeners();
     return true;
   }
 
@@ -90,15 +92,16 @@ class TodoProvider extends ChangeNotifier {
   void switchToSavedList(String id) {
     _saveAll();
     final found = savedLists.firstWhere((l) => l.id == id, orElse: () => savedLists.isNotEmpty ? savedLists.first : current);
-    // print("switchToSavedList: ${found.toJson()}");
     current = TodoList(id: found.id, name: found.name, tasks: found.tasks.map((t) => Task(id: t.id, title: t.title, done: t.done)).toList());
     notifyListeners();
   }
 
-  void createNewEmptyList(String name) {
+  bool createNewEmptyList(String name) {
+    if (savedLists.length >= Constants.max_lists) return false;
     current = TodoList(id: Uuid().v4(), name: name, tasks: []);
     _saveCurrent();
-    notifyListeners();
+    saveCurrentAs(name);
+    return true;
   }
 
   // Persistence

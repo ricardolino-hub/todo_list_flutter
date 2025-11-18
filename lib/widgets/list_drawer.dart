@@ -38,13 +38,13 @@ class ListDrawer extends StatelessWidget {
               leading: Icon(Icons.save),
               title: Text('Salvar lista atual'),
               onTap: () async {
-                Navigator.of(context).pop();
                 final name = await _askName(context, prov.current.name);
                 if (name != null && name.trim().isNotEmpty) {
                   final success = prov.saveCurrentAs(name.trim());
                   final snack = success ? 'Lista salva' : 'Já existem ${3} listas salvas (limite)';
                   if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(snack)));
+                  Navigator.of(context).pop();
                 }
               },
             ),
@@ -52,10 +52,13 @@ class ListDrawer extends StatelessWidget {
               leading: Icon(Icons.create_new_folder),
               title: Text('Nova lista vazia'),
               onTap: () async {
-                Navigator.of(context).pop();
                 final name = await _askName(context, 'Nova lista');
                 if (name != null && name.trim().isNotEmpty) {
-                  prov.createNewEmptyList(name.trim());
+                  final success = prov.createNewEmptyList(name.trim());
+                  final snack = success ? 'Lista salva' : 'Já existem ${3} listas salvas (limite)';
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(snack)));
+                  Navigator.of(context).pop();
                 }
               },
             ),
