@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
             if (list.tasks.isEmpty)
               Padding(
                 padding: EdgeInsets.all(24),
-                child: Text('Nenhuma tarefa. Use o botão + para adicionar.'),
+                child: prov.savedLists.isEmpty ? Text('Nenhuma lista encontrada. Use o menu lateral para criar uma nova.') : Text('Nenhuma tarefa. Use o botão + para adicionar.'),
               ),
             Expanded(
               child: ListView.builder(
@@ -96,7 +96,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: prov.savedLists.isEmpty ? null : FloatingActionButton(
           onPressed: () async {
             if (prov.current.tasks.length >= 10) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Máximo de 10 tarefas por lista')));

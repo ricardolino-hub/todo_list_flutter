@@ -11,7 +11,7 @@ class TodoProvider extends ChangeNotifier {
   List<TodoList> savedLists;
 
   TodoProvider({required this.storage, required TodoList? initial, required this.savedLists})
-      : current = initial ?? TodoList(id: Uuid().v4(), name: 'Lista atual', tasks: []);
+      : current = initial ?? TodoList(id: Uuid().v4(), name: 'Crie uma nova lista', tasks: []);
 
   // Load from storage helper
   static Future<TodoProvider> create(StorageService storage) async {
@@ -84,15 +84,42 @@ class TodoProvider extends ChangeNotifier {
   }
 
   void deleteSavedList(String id) {
+    final index = savedLists.indexWhere((list) => list.id == id);
+    if (index == -1) return;
+
+    final isDeletingCurrent = savedLists[index].id == current.id;
+
     savedLists.removeWhere((l) => l.id == id);
+
+    if (savedLists.isEmpty) {
+      current = TodoList(
+        id: const Uuid().v4(),
+        name: 'Crie uma nova lista',
+        tasks: [],
+      );
+      savedLists = [];
+      _saveAll();
+      notifyListeners();
+      return;
+    }
+
+    if (isDeletingCurrent) {
+      if (index - 1 >= 0) {
+        current = savedLists[index - 1];
+      }else if (index < savedLists.length) {
+        current = savedLists[index];
+      }else {
+        current = savedLists.first;
+      }
+    }
     _saveAllLists();
     notifyListeners();
   }
 
   void switchToSavedList(String id) {
-    _saveAll();
     final found = savedLists.firstWhere((l) => l.id == id, orElse: () => savedLists.isNotEmpty ? savedLists.first : current);
     current = TodoList(id: found.id, name: found.name, tasks: found.tasks.map((t) => Task(id: t.id, title: t.title, done: t.done)).toList());
+    _saveAll();
     notifyListeners();
   }
 
