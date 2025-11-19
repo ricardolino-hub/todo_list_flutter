@@ -76,13 +76,6 @@ class TodoProvider extends ChangeNotifier {
     return true;
   }
 
-  void overwriteSavedList(String id, TodoList newList) {
-    final idx = savedLists.indexWhere((l) => l.id == id);
-    if (idx >= 0) savedLists[idx] = newList;
-    _saveAllLists();
-    notifyListeners();
-  }
-
   void deleteSavedList(String id) {
     final index = savedLists.indexWhere((list) => list.id == id);
     if (index == -1) return;
@@ -112,6 +105,7 @@ class TodoProvider extends ChangeNotifier {
         current = savedLists.first;
       }
     }
+    _saveCurrent();
     _saveAllLists();
     notifyListeners();
   }
@@ -129,6 +123,15 @@ class TodoProvider extends ChangeNotifier {
     _saveCurrent();
     saveCurrentAs(name);
     return true;
+  }
+
+  Future<void> updateListName(String newName) async {
+    if (newName.isEmpty) return;
+    current.name = newName;
+    savedLists.firstWhere((l) => l.id == current.id).name = newName;
+    await storage.saveListName(newName, current.id);
+    _saveAll();
+    notifyListeners();
   }
 
   // Persistence

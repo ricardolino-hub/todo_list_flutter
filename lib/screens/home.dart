@@ -29,7 +29,15 @@ class HomeScreen extends StatelessWidget {
       final list = prov.current;
       return Scaffold(
         appBar: AppBar(
-          title: Text(list.name),
+          //title: Text(list.name),
+          title: prov.savedLists.isEmpty 
+            ? Text(list.name) 
+            : GestureDetector(
+              onTap: () {
+                _showEditListNameDialog(context);
+              },
+              child: Text(list.name),
+            ),
           leading: Builder(builder: (ctx) => IconButton(icon: Icon(Icons.menu), onPressed: () => Scaffold.of(ctx).openDrawer())),
         ),
         drawer: ListDrawer(),
@@ -109,4 +117,38 @@ class HomeScreen extends StatelessWidget {
       );
     });
   }
+}
+
+void _showEditListNameDialog(BuildContext context) {
+  final prov = context.read<TodoProvider>();
+  final controller = TextEditingController(text: prov.current.name);
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Editar nome da lista"),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: "Nome da lista",
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () async {
+              await prov.updateListName(controller.text.trim());
+              Navigator.pop(context);
+            },
+            child: Text("Salvar"),
+          ),
+        ],
+      );
+    },
+  );
 }

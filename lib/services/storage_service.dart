@@ -31,4 +31,11 @@ class StorageService {
     if (raw == null) return null;
     return TodoList.fromJson(jsonDecode(raw) as Map<String, dynamic>);
   }
+
+  Future<void> saveListName(String name, String id) async {
+    final lists = await loadAllLists();
+    lists[lists.indexWhere((l) => l.id == id)].name = name;
+    saveCurrentList(lists.firstWhere((l) => l.id == id));
+    saveAllLists(lists);
+  }
 }
